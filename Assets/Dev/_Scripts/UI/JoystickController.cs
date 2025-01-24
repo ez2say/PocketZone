@@ -15,10 +15,12 @@ namespace PocketZone
 
         public void OnDrag(PointerEventData eventData)
         {
+            Debug.Log("OnDrag called"); // Отладочное сообщение
+
             Vector2 pos;
 
-            if(RectTransformUtility.ScreenPointToLocalPointInRectangle(_joystickBackground.rectTransform, eventData.position,
-            eventData.pressEventCamera, out pos))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_joystickBackground.rectTransform, eventData.position,
+                eventData.pressEventCamera, out pos))
             {
                 pos.x = (pos.x / _joystickBackground.rectTransform.sizeDelta.x);
                 pos.y = (pos.y / _joystickBackground.rectTransform.sizeDelta.y);
@@ -30,16 +32,20 @@ namespace PocketZone
                     _inputVector.x * (_joystickBackground.rectTransform.sizeDelta.x / 2),
                     _inputVector.y * (_joystickBackground.rectTransform.sizeDelta.y / 2)
                 );
+
+                Debug.Log($"Joystick Input: {_inputVector}"); // Отладочное сообщение с текущим вводом
             }
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            Debug.Log("OnPointerDown called"); // Отладочное сообщение
             OnDrag(eventData);
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            Debug.Log("OnPointerUp called"); // Отладочное сообщение
             _inputVector = Vector2.zero;
             _joystickHandle.rectTransform.anchoredPosition = Vector2.zero;
         }
@@ -50,4 +56,3 @@ namespace PocketZone
         }
     }
 }
-

@@ -1,13 +1,17 @@
 using UnityEngine;
 
-public class ShootController : MonoBehaviour
+namespace PocketZone
 {
-    [SerializeField] private GameObject _bulletPrefab;
-
-    [SerializeField] private Transform _firePoint;
-
-    public void Shoot()
+    public class ShootController : MonoBehaviour
     {
-        Instantiate(_bulletPrefab, _firePoint.position, _firePoint.rotation);
-    }
+        [SerializeField] private GameObject _bulletPrefab;
+
+        [SerializeField] private Transform _firePoint;
+
+        public void Shoot()
+        {
+            Instantiate(_bulletPrefab, _firePoint.position, _firePoint.rotation);
+        }
+    } 
 }
+
