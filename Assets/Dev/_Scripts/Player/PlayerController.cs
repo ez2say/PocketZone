@@ -14,15 +14,13 @@ namespace PocketZone
 
             Vector2 moveInput = _joystick.GetInput();
 
-            // Проверка на NaN
             if (float.IsNaN(moveInput.x) || float.IsNaN(moveInput.y))
             {
                 moveInput = Vector2.zero;
             }
 
-            Debug.Log($"Player Move Input: {moveInput}"); // Отладочное сообщение
+            Debug.Log($"Player Move Input: {moveInput}");
 
-            // Применяем движение с учетом Time.deltaTime
             transform.position += (Vector3)moveInput * _speed * Time.deltaTime;
         }
     }
