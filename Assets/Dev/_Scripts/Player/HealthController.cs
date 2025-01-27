@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 
 namespace PocketZone
 {
     public class HealthController : MonoBehaviour, IDamageable
     {
+        public event Action OnDeath;
         public int Health { get; set; }
 
         [SerializeField] private int _maxHealth = 100;
@@ -33,6 +35,7 @@ namespace PocketZone
 
         public virtual void Die()
         {
+            OnDeath?.Invoke();
             Destroy(gameObject);
         }
 

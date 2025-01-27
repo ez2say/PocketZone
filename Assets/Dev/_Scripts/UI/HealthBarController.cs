@@ -23,7 +23,7 @@ namespace PocketZone
         {
             if (_target != null)
             {
-                _rectTransform.position = _target.position + _offset;
+                _rectTransform.position = Camera.main.WorldToScreenPoint(_target.position + _offset);
             }
         }
     }

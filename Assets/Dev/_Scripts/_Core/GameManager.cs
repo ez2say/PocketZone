@@ -5,6 +5,7 @@ namespace PocketZone
 {
     public class GameManager : MonoBehaviour
     {
+        public PlayerController PlayerController => _playerController;
         public static GameManager Instance { get; private set; }
 
         [Header("Inventory Settings")]
@@ -17,6 +18,10 @@ namespace PocketZone
         [Header("Player Settings")]
         [SerializeField] private PlayerController _playerController;
         [SerializeField] private JoystickController _joystick;
+        [SerializeField] private HealthController _healthController;
+
+        [Header("Enemy Spawning")]
+        [SerializeField] private EnemySpawner _enemySpawner;
 
         private InventoryController _inventoryController;
 
@@ -47,6 +52,15 @@ namespace PocketZone
             _playerController.SetMoveHandler(moveHandler);
 
             _playerController.SetJoystick(_joystick);
+
+            _playerController.SetHealthController(_healthController);
+            
+            InitializeEnemySpawner();
+        }
+
+        private void InitializeEnemySpawner()
+        {
+            _enemySpawner.Initialize();
         }
 
         private void ToggleInventory()
