@@ -13,24 +13,13 @@ namespace PocketZone
         [SerializeField] private GameObject _healthBarPrefab;
         [SerializeField] private Vector3 _healthBarOffset = new Vector3(0, 1f, 0);
 
-        private Slider _healthSlider;
-        private HealthBarController _healthBarController;
+        [SerializeField] private HealthBarController _healthBarController;
+
 
         protected virtual void Start()
         {
             Health = _maxHealth;
-            InitializeHealthBar();
             UpdateHealthUI();
-        }
-
-        private void InitializeHealthBar()
-        {
- 
-            GameObject healthBarInstance = Instantiate(_healthBarPrefab, transform.position, Quaternion.identity);
-            _healthBarController = healthBarInstance.GetComponent<HealthBarController>();
-            _healthSlider = healthBarInstance.GetComponentInChildren<Slider>();               
-            _healthBarController.SetTarget(transform, _healthBarOffset);
-
         }
 
         public void TakeDamage(int damage)
@@ -54,8 +43,8 @@ namespace PocketZone
 
         private void UpdateHealthUI()
         {
-            if (_healthSlider != null)
-                _healthSlider.value = (float)Health / _maxHealth;
+            if (_healthBarController != null)
+                _healthBarController.DecreaseHealthBar((float)Health / _maxHealth);
         }
     }
 }

@@ -93,9 +93,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b0a57df0293e6a44913692c2691b726, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 20
-  _healthBarPrefab: {fileID: 0}
+  _maxHealth: 10
+  _healthBarPrefab: {fileID: 3312320258491188276}
   _healthBarOffset: {x: 0, y: 1, z: 0}
+  _healthBarController: {fileID: 6542379966010227327}
 --- !u!114 &797737462035042162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -886,8 +887,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e24ce90d2eb041445b04f50953af7e92, type: 3}
+--- !u!1 &3312320258491188276 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2558826622603095285, guid: e24ce90d2eb041445b04f50953af7e92, type: 3}
+  m_PrefabInstance: {fileID: 1041878493759236289}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3312320258491188277 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2558826622603095284, guid: e24ce90d2eb041445b04f50953af7e92, type: 3}
   m_PrefabInstance: {fileID: 1041878493759236289}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6542379966010227327 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6106402887888835262, guid: e24ce90d2eb041445b04f50953af7e92, type: 3}
+  m_PrefabInstance: {fileID: 1041878493759236289}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9103580b8ed3648419c2d84ee0882df0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

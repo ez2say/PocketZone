@@ -1,18 +1,22 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PocketZone
 {
     public class HealthBarController : MonoBehaviour
     {
-        [SerializeField] private Transform _target;
-        [SerializeField] private Vector3 _offset;
+        private Slider _healthSlider;
 
-        
-
-        public void SetTarget(Transform target, Vector3 offset)
+        private void Start()
         {
-            _target = target;
-            _offset = offset;
+            _healthSlider = GetComponent<Slider>();
         }
+
+        public void DecreaseHealthBar(float value)
+        {
+            _healthSlider.value = value;
+        }
+
+
     }
 }
