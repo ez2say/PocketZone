@@ -46,26 +46,20 @@ namespace PocketZone
             _inventoryController = new InventoryController(_inventoryPanel, _slots, _removeOneButton, _removeAllButton);
 
             _removeAllButton.onClick.AddListener(_inventoryController.OnButtonClick);
-
             _removeOneButton.onClick.AddListener(_inventoryController.OnButtonClick);
-
             _toggleInventoryButton.onClick.AddListener(ToggleInventory);
 
             IMoveHandler moveHandler = new MoveHandler();
-
             _playerController.SetMoveHandler(moveHandler);
-
             _playerController.SetJoystick(_joystick);
+            _playerController.SetHealthController(_healthController);//Все раскидать по методам,разгрузить старт
 
-            _playerController.SetHealthController(_healthController);
-            
             InitializeEnemySpawner();
         }
 
-
         private void InitializeEnemySpawner()
         {
-            _enemySpawner.Initialize();
+            _enemySpawner.Initialize(_playerController.transform);
         }
 
         private void ToggleInventory()

@@ -14,9 +14,11 @@ namespace PocketZone
 
         private int _currentEnemies = 0;
         private Coroutine _spawnCoroutine;
+        private Transform _playerTransform;
 
-        public void Initialize()
+        public void Initialize(Transform playerTransform)
         {
+            _playerTransform = playerTransform;
             StartSpawning();
         }
 
@@ -36,6 +38,11 @@ namespace PocketZone
                     {
                         GameObject enemyPrefab = _enemyPrefabs[UnityEngine.Random.Range(0, _enemyPrefabs.Length)];
                         GameObject enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+
+                        EnemyController enemyController = enemy.GetComponent<EnemyController>();
+
+                        enemyController.SetPlayerTransform(_playerTransform);
+
                         SubscribeToEnemyDeath(enemy);
                         _currentEnemies++;
 
@@ -76,10 +83,9 @@ namespace PocketZone
 
         private bool IsTooCloseToPlayer(Vector2 position)
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
+            if (_playerTransform != null)
             {
-                float distanceToPlayer = Vector2.Distance(position, player.transform.position);
+                float distanceToPlayer = Vector2.Distance(position, _playerTransform.position);
                 return distanceToPlayer < _minDistanceFromPlayer;
             }
             return false;
