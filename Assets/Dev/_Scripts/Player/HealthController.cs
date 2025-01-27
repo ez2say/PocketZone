@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-
 namespace PocketZone
 {
     public class HealthController : MonoBehaviour, IDamageable
@@ -11,21 +10,33 @@ namespace PocketZone
         public int Health { get; set; }
 
         [SerializeField] private int _maxHealth = 100;
+        [SerializeField] private GameObject _healthBarPrefab;
+        [SerializeField] private Vector3 _healthBarOffset = new Vector3(0, 1f, 0);
 
-        [SerializeField] private Slider _healthSlider;
-
-        [SerializeField] private HealthBarController _healthBarController;
+        private Slider _healthSlider;
+        private HealthBarController _healthBarController;
 
         protected virtual void Start()
         {
             Health = _maxHealth;
+            InitializeHealthBar();
             UpdateHealthUI();
+        }
+
+        private void InitializeHealthBar()
+        {
+ 
+            GameObject healthBarInstance = Instantiate(_healthBarPrefab, transform.position, Quaternion.identity);
+            _healthBarController = healthBarInstance.GetComponent<HealthBarController>();
+            _healthSlider = healthBarInstance.GetComponentInChildren<Slider>();               
+            _healthBarController.SetTarget(transform, _healthBarOffset);
+
         }
 
         public void TakeDamage(int damage)
         {
             Health -= damage;
-            if(Health <= 0)
+            if (Health <= 0)
             {
                 Health = 0;
                 Die();
@@ -36,15 +47,15 @@ namespace PocketZone
         public virtual void Die()
         {
             OnDeath?.Invoke();
+            if (_healthBarController != null)
+                Destroy(_healthBarController.gameObject);
             Destroy(gameObject);
         }
 
         private void UpdateHealthUI()
         {
-            _healthSlider.value = (float)Health / _maxHealth;
-            _healthBarController.SetTarget(transform);
+            if (_healthSlider != null)
+                _healthSlider.value = (float)Health / _maxHealth;
         }
-        
     }
 }
-

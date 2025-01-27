@@ -7,23 +7,18 @@ namespace PocketZone
         [SerializeField] private Transform _target;
         [SerializeField] private Vector3 _offset;
 
-        private RectTransform _rectTransform;
-
-        private void Start()
-        {
-            _rectTransform = GetComponent<RectTransform>();
-        }
-
-        public void SetTarget(Transform target)
+        public void SetTarget(Transform target, Vector3 offset)
         {
             _target = target;
+            _offset = offset;
         }
 
-        private void Update()
+        void LateUpdate()
         {
             if (_target != null)
             {
-                _rectTransform.position = Camera.main.WorldToScreenPoint(_target.position + _offset);
+                transform.position = _target.position + _offset;
+                transform.rotation = Camera.main.transform.rotation;
             }
         }
     }

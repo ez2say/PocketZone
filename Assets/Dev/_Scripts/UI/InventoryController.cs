@@ -24,7 +24,7 @@ namespace PocketZone
         
         public void OnButtonClick()
         {
-            Interact();
+
         }
 
         public void Interact()
@@ -90,8 +90,8 @@ namespace PocketZone
 
             HideButtons();
 
-            _removeOneButton.onClick.AddListener(OnButtonClick);
-            _removeAllButton.onClick.AddListener(OnButtonClick);
+            _removeOneButton.onClick.AddListener(RemoveOneItem);
+            _removeAllButton.onClick.AddListener(RemoveAllItems);
 
             for (int i = 0; i < _slots.Length; i++)
             {
@@ -113,8 +113,6 @@ namespace PocketZone
                 }
 
                 _selectedSlot.UpdateUI();
-                HideButtons();
-                _selectedSlot = null;
             }
         }
 
@@ -125,8 +123,6 @@ namespace PocketZone
                 _selectedSlot.Item = null;
                 _selectedSlot.Count = 0;
                 _selectedSlot.UpdateUI();
-                HideButtons();
-                _selectedSlot = null;
             }
         }
 

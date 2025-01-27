@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 1732618053182562188}
   - component: {fileID: 1732618053182562226}
   - component: {fileID: 939887267}
-  - component: {fileID: 939887266}
+  - component: {fileID: -7129953715130959169}
+  - component: {fileID: 797737462035042162}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79,7 +80,22 @@ CircleCollider2D:
   m_Offset: {x: -2, y: -1}
   serializedVersion: 2
   m_Radius: 0.25
---- !u!114 &939887266
+--- !u!114 &-7129953715130959169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732618053182562224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b0a57df0293e6a44913692c2691b726, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 20
+  _healthBarPrefab: {fileID: 0}
+  _healthBarOffset: {x: 0, y: 1, z: 0}
+--- !u!114 &797737462035042162
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,14 +108,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 5
-  _localDetectionCenter: {x: -2, y: -1}
-  _rb: {fileID: 1732618053182562226}
-  _defaultPosition: {x: 0, y: 0}
-  _detectionRange: 1
-  _attackRange: 0.25
-  _backStepDistance: 1
-  _attackDamage: 1
-  _returnThreshold: 0.1
+  _itemPrefabs:
+  - {fileID: 6118804006442830450, guid: 8e7c48db25b8b3f439662670a9d3b157, type: 3}
+  - {fileID: 6118804006442830450, guid: 8e7c48db25b8b3f439662670a9d3b157, type: 3}
 --- !u!1 &1732618053344966136
 GameObject:
   m_ObjectHideFlags: 0

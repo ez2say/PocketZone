@@ -5,6 +5,7 @@ namespace PocketZone
 {
     public class GameManager : MonoBehaviour
     {
+        public Canvas UICanvas => _uiCanvas;
         public PlayerController PlayerController => _playerController;
         public static GameManager Instance { get; private set; }
 
@@ -22,6 +23,9 @@ namespace PocketZone
 
         [Header("Enemy Spawning")]
         [SerializeField] private EnemySpawner _enemySpawner;
+
+        [Header("UI Settings")]
+        [SerializeField] private Canvas _uiCanvas;
 
         private InventoryController _inventoryController;
 
@@ -57,6 +61,7 @@ namespace PocketZone
             
             InitializeEnemySpawner();
         }
+
 
         private void InitializeEnemySpawner()
         {

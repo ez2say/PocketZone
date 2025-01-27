@@ -4,7 +4,7 @@ namespace PocketZone
 {
     public class ShootController : MonoBehaviour, IInteractable
     {
-        [SerializeField] private GameObject _bulletPrefab; // Создать класс AssetsProvider и через него получать префабы
+        [SerializeField] private GameObject _bulletPrefab;
         [SerializeField] private Transform _firePoint;
         [SerializeField] private float _bulletSpeed = 10f;
 
