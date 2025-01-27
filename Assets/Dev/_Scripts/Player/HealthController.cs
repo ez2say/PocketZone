@@ -19,6 +19,7 @@ namespace PocketZone
         protected virtual void Start()
         {
             Health = _maxHealth;
+            Debug.Log($"{Health}");
             UpdateHealthUI();
         }
 

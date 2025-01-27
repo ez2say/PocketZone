@@ -6,7 +6,7 @@ namespace PocketZone
     public class EnemySpawner : MonoBehaviour
     {
         [Header("Spawn Settings")]
-        [SerializeField] private PolygonCollider2D _spawnArea;
+        [SerializeField] private BoxCollider2D _spawnArea;
         [SerializeField] private GameObject[] _enemyPrefabs;
         [SerializeField] private int _maxEnemies = 10;
         [SerializeField] private float _spawnInterval = 5f;

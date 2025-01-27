@@ -6,7 +6,7 @@ namespace PocketZone
     public class EnemyController : Entity
     {
         [SerializeField] private List<GameObject> _itemPrefabs;
-        [SerializeField] private float _dropOffsetRange = 0.5f;
+        [SerializeField] private float _dropOffsetRange = 0f;
 
         private HealthController _healthController;
 
@@ -36,7 +36,9 @@ namespace PocketZone
                         0
                     );
 
-                    Instantiate(itemPrefab, transform.position + randomOffset, Quaternion.identity);
+                    var item  =  Instantiate(itemPrefab);
+                    item.transform.position = transform.position;
+                    
                 }
             }
         }

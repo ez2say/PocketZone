@@ -9,7 +9,11 @@ namespace PocketZone
 
         private void Start()
         {
-            _healthSlider = GetComponent<Slider>();
+            _healthSlider = GetComponentInChildren<Slider>(true);
+
+            _healthSlider.value = 1;
+
+            Debug.Log($"{_healthSlider.value}");
         }
 
         public void DecreaseHealthBar(float value)
