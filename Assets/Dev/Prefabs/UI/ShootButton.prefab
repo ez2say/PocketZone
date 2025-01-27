@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5724782654224483131}
   - component: {fileID: 5724782654224483078}
+  - component: {fileID: 1939525728887111779}
   - component: {fileID: 5724782654224483077}
   - component: {fileID: 5724782654224483076}
   m_Layer: 0
@@ -47,6 +48,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5724782654224483130}
   m_CullTransparentMesh: 1
+--- !u!114 &1939525728887111779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5724782654224483130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39ba13c2453968e4d810f75e577f13bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bulletPrefab: {fileID: 0}
+  _firePoint: {fileID: 0}
+  _shootDirection: {x: 1, y: 0}
+  _bulletSpeed: 10
 --- !u!114 &5724782654224483077
 MonoBehaviour:
   m_ObjectHideFlags: 0

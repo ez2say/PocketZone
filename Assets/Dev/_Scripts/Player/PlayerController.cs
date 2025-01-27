@@ -2,26 +2,44 @@ using UnityEngine;
 
 namespace PocketZone
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : HealthController
     {
-        [SerializeField] private JoystickController _joystick;
         [SerializeField] private float _speed = 5f;
+        [SerializeField] private SpriteRenderer[] _bodyParts;
+        [SerializeField] private ShootController _shootController;
+
+        private bool _isFacingRight = true;
+        private IMoveHandler _moveHandler;
+        private JoystickController _joystick;
+
+
+        public void SetMoveHandler(IMoveHandler moveHandler)
+        {
+            _moveHandler = moveHandler;
+        }
+
+        public void SetJoystick(JoystickController joystick)
+        {
+            _joystick = joystick;
+        }
 
         private void Update()
         {
-            if (_joystick == null)
-                return;
+            HandleMovement();
+            UpdateShootDirection();
+        }
 
-            Vector2 moveInput = _joystick.GetInput();
+        private void HandleMovement()
+        {
+            _moveHandler.HandleMovement(transform, _joystick, _speed, ref _isFacingRight, _bodyParts, _shootController);
+        }
 
-            if (float.IsNaN(moveInput.x) || float.IsNaN(moveInput.y))
+        private void UpdateShootDirection()
+        {
+            if (_shootController != null)
             {
-                moveInput = Vector2.zero;
+                _shootController.UpdateShootDirection(_isFacingRight);
             }
-
-            Debug.Log($"Player Move Input: {moveInput}");
-
-            transform.position += (Vector3)moveInput * _speed * Time.deltaTime;
         }
     }
 }

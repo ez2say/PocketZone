@@ -3,31 +3,28 @@ using UnityEngine.UI;
 
 namespace PocketZone
 {
-    public class InventoryController : MonoBehaviour, IInteractable
+    public class InventoryController : IInteractable, ISlotClickHandler,IButtonHandler, IInventory
     {
-        [SerializeField] private GameObject _inventoryPanel;
-        [SerializeField] private InventorySlot[] slots;
-
-        [SerializeField] private Button _removeOneButton;
-        [SerializeField] private Button _removeAllButton;
+        private GameObject _inventoryPanel;
+        private InventorySlot[] _slots;
+        private Button _removeOneButton;
+        private Button _removeAllButton;
 
         private InventorySlot _selectedSlot;
 
-        private void Start()
+        public InventoryController(GameObject inventoryPanel, InventorySlot[] slots, Button removeOneButton, Button removeAllButton)
         {
-            _inventoryPanel.SetActive(true);
+            _inventoryPanel = inventoryPanel;
+            _slots = slots;
+            _removeOneButton = removeOneButton;
+            _removeAllButton = removeAllButton;
 
-            HideButtons();
-
-            _removeOneButton.onClick.AddListener(RemoveOneItem);
-            _removeAllButton.onClick.AddListener(RemoveAllItems);
-
-            for (int i = 0; i < slots.Length; i++)
-            {
-                slots[i].Initialize(OnSlotClick, i); 
-            }
-
-            _inventoryPanel.SetActive(false);
+            Initialize();
+        }
+        
+        public void OnButtonClick()
+        {
+            Interact();
         }
 
         public void Interact()
@@ -48,7 +45,7 @@ namespace PocketZone
 
         public bool AddItem(Item item)
         {
-            foreach (var slot in slots)
+            foreach (var slot in _slots)
             {
                 if (slot.Item != null && slot.Item.ID == item.ID && slot.Count < slot.Item.MaxStack)
                 {
@@ -58,7 +55,7 @@ namespace PocketZone
                 }
             }
 
-            foreach (var slot in slots)
+            foreach (var slot in _slots)
             {
                 if (slot.Item == null)
                 {
@@ -72,22 +69,36 @@ namespace PocketZone
             return false;
         }
 
-        private void OnSlotClick(InventorySlot slot)
+        public void OnSlotClick(InventorySlot slot)
         {
             if (_selectedSlot == slot)
             {
                 HideButtons();
-
                 _selectedSlot = null;
             }
             else
             {
                 _selectedSlot = slot;
-                
                 ShowButtons(slot);
-
                 Debug.Log("Выбран слот " + (slot.Index + 1));
             }
+        }
+
+        private void Initialize()
+        {
+            _inventoryPanel.SetActive(true);
+
+            HideButtons();
+
+            _removeOneButton.onClick.AddListener(OnButtonClick);
+            _removeAllButton.onClick.AddListener(OnButtonClick);
+
+            for (int i = 0; i < _slots.Length; i++)
+            {
+                _slots[i].Initialize(this, i);
+            }
+
+            _inventoryPanel.SetActive(false);
         }
 
         private void RemoveOneItem()
@@ -107,19 +118,14 @@ namespace PocketZone
             }
         }
 
-        // Удалить все предметы
         private void RemoveAllItems()
         {
             if (_selectedSlot != null && _selectedSlot.Item != null)
             {
                 _selectedSlot.Item = null;
-
                 _selectedSlot.Count = 0;
-
                 _selectedSlot.UpdateUI();
-
                 HideButtons();
-
                 _selectedSlot = null;
             }
         }
@@ -141,70 +147,7 @@ namespace PocketZone
         private void HideButtons()
         {
             _removeOneButton.gameObject.SetActive(false);
-
             _removeAllButton.gameObject.SetActive(false);
-        }
-    }
-
-    [System.Serializable]
-    public class InventorySlot
-    {
-        public Item Item;
-        public int Count;
-        public Image Icon;
-        public Text CountText;
-
-        public int Index; // Индекс слота
-
-        private System.Action<InventorySlot> _onSlotClick;
-
-        public void Initialize(System.Action<InventorySlot> onSlotClick, int index)
-        {
-            _onSlotClick = onSlotClick;
-            Index = index;
-
-
-            Button slotButton = Icon.GetComponentInParent<Button>();
-            if (slotButton != null)
-            {
-                slotButton.onClick.AddListener(OnSlotClick);
-            }
-            else
-            {
-                Debug.LogWarning("No Button component found on slot " + (Index + 1));
-            }
-        }
-
-        public void UpdateUI()
-        {
-            if (Item != null)
-            {
-                Icon.sprite = Item.Icon;
-
-                Icon.enabled = true;
-
-                if (Count > 1)
-                {
-                    CountText.text = Count.ToString();
-
-                    CountText.enabled = true;
-                }
-                else
-                {
-                    CountText.enabled = false;
-                }
-            }
-            else
-            {
-                Icon.enabled = false;
-
-                CountText.enabled = false;
-            }
-        }
-
-        private void OnSlotClick()
-        {
-            _onSlotClick?.Invoke(this);
         }
     }
 }
