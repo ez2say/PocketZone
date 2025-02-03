@@ -1,7 +1,7 @@
-using UnityEngine;
-
-public interface IInteractable 
-{   
-    void Interact();
+namespace PocketZone
+{
+    public interface IInteractable
+    {
+        void Interact();
+    }
 }
-

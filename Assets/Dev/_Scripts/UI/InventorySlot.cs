@@ -1,4 +1,6 @@
 using UnityEngine.UI;
+using System;
+using UnityEngine;
 
 namespace PocketZone
 {
@@ -10,7 +12,6 @@ namespace PocketZone
         public Image Icon;
         public Text CountText;
         public int Index;
-
         private ISlotClickHandler _clickHandler;
 
         public void Initialize(ISlotClickHandler clickHandler, int index)
@@ -18,32 +19,73 @@ namespace PocketZone
             _clickHandler = clickHandler;
             Index = index;
 
-            Button slotButton = Icon.GetComponentInParent<Button>();
+            if (Icon == null)
+            {
+                Debug.LogError("Icon is not assigned for inventory slot at index " + index);
+                return;
+            }
 
-            slotButton.onClick.AddListener(OnSlotClick);
+            Button slotButton = Icon.GetComponent<Button>();
+            if (slotButton != null)
+            {
+                slotButton.onClick.AddListener(OnSlotClick);
+            }
+            else
+            {
+                Debug.LogError("Button component not found for inventory slot at index " + index + ". Ensure that the parent GameObject of the Icon has a Button component.");
+            }
         }
 
         public void UpdateUI()
         {
             if (Item != null)
             {
-                Icon.sprite = Item.Icon;
-                Icon.enabled = true;
-
-                if (Count > 1)
+                if (Icon != null)
                 {
-                    CountText.text = Count.ToString();
-                    CountText.enabled = true;
+                    Icon.sprite = Item.Icon;
+                    Icon.enabled = true;
                 }
                 else
                 {
-                    CountText.enabled = false;
+                    Debug.LogError("Icon is not assigned for inventory slot at index " + Index);
+                }
+
+                if (CountText != null)
+                {
+                    if (Count > 1)
+                    {
+                        CountText.text = Count.ToString();
+                        CountText.enabled = true;
+                    }
+                    else
+                    {
+                        CountText.enabled = false;
+                    }
+                }
+                else
+                {
+                    Debug.LogError("CountText is not assigned for inventory slot at index " + Index);
                 }
             }
             else
             {
-                Icon.enabled = false;
-                CountText.enabled = false;
+                if (Icon != null)
+                {
+                    Icon.enabled = false;
+                }
+                else
+                {
+                    Debug.LogError("Icon is not assigned for inventory slot at index " + Index);
+                }
+
+                if (CountText != null)
+                {
+                    CountText.enabled = false;
+                }
+                else
+                {
+                    Debug.LogError("CountText is not assigned for inventory slot at index " + Index);
+                }
             }
         }
 
