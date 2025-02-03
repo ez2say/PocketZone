@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 namespace PocketZone
 {
@@ -19,12 +21,16 @@ namespace PocketZone
         [SerializeField] private int _currentAmmo;
         [SerializeField] private bool _infiniteAmmo = false;
 
+        [SerializeField] private TextMeshProUGUI _ammoText;
+
         private bool _isFacingRight = true;
         private float _nextFireTime;
 
         private void Start()
         {
             _currentAmmo = _maxAmmo;
+
+            UpdateAmmoText();
         }
 
         public void Interact()
@@ -37,8 +43,12 @@ namespace PocketZone
             if (CanShoot())
             {
                 Shoot();
+                
                 ConsumeAmmo();
+
                 _nextFireTime = Time.time + _fireRate;
+
+                UpdateAmmoText();
             }
         }
 
@@ -67,6 +77,7 @@ namespace PocketZone
         public void AddAmmo(int amount)
         {
             _currentAmmo = Mathf.Clamp(_currentAmmo + amount, 0, _maxAmmo);
+            UpdateAmmoText();
         }
 
         public void UpdateShootDirection(bool isFacingRight)
@@ -74,6 +85,20 @@ namespace PocketZone
             _isFacingRight = isFacingRight;
         }
 
+        private void UpdateAmmoText()
+        {
+            if (_ammoText != null)
+            {
+                if (_infiniteAmmo)
+                {
+                    _ammoText.text = "∞";
+                }
+                else
+                {
+                    _ammoText.text = $"{_currentAmmo}/{_maxAmmo}";
+                }
+            }
+        }
         
     }
 }
