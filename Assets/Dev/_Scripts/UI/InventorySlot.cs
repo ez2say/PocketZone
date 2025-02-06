@@ -24,15 +24,10 @@ namespace PocketZone
                 Debug.LogError("Icon is not assigned for inventory slot at index " + index);
                 return;
             }
-
             Button slotButton = Icon.GetComponent<Button>();
             if (slotButton != null)
             {
                 slotButton.onClick.AddListener(OnSlotClick);
-            }
-            else
-            {
-                Debug.LogError("Button component not found for inventory slot at index " + index + ". Ensure that the parent GameObject of the Icon has a Button component.");
             }
         }
 
@@ -44,10 +39,6 @@ namespace PocketZone
                 {
                     Icon.sprite = Item.Icon;
                     Icon.enabled = true;
-                }
-                else
-                {
-                    Debug.LogError("Icon is not assigned for inventory slot at index " + Index);
                 }
 
                 if (CountText != null)
@@ -62,30 +53,11 @@ namespace PocketZone
                         CountText.enabled = false;
                     }
                 }
-                else
-                {
-                    Debug.LogError("CountText is not assigned for inventory slot at index " + Index);
-                }
             }
             else
             {
-                if (Icon != null)
-                {
-                    Icon.enabled = false;
-                }
-                else
-                {
-                    Debug.LogError("Icon is not assigned for inventory slot at index " + Index);
-                }
-
-                if (CountText != null)
-                {
-                    CountText.enabled = false;
-                }
-                else
-                {
-                    Debug.LogError("CountText is not assigned for inventory slot at index " + Index);
-                }
+                Icon.enabled = false;
+                CountText.enabled = false;
             }
         }
 

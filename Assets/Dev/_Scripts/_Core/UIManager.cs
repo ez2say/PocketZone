@@ -17,7 +17,7 @@ namespace PocketZone
 
             _inventoryPresenter = new InventoryPresenter(_inventoryModel, _inventoryView);
 
-            _inventoryView.Initialize(_inventoryPresenter);
+            _inventoryView.Initialize();
         }
 
         public bool AddItem(Item item)

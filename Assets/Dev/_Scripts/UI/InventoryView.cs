@@ -1,29 +1,35 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace PocketZone
-{
-    public class InventoryView : MonoBehaviour, ISlotClickHandler
+{   
+    public enum SlotAction
     {
+        Select,
+        Deselect
+    }
+    public class InventoryView : MonoBehaviour, IInventoryView, ISlotClickHandler
+    {   
+        public event Action<int, SlotAction> SlotInteraction;
+        public event Action<bool> ToggleInventoryInteraction;
+        public event Action RemoveOneInteraction;
+        public event Action RemoveAllInteraction;
+
         [SerializeField] private GameObject _inventoryPanel;
         [SerializeField] private InventorySlot[] _slots;
         [SerializeField] private Button _removeOneButton;
         [SerializeField] private Button _removeAllButton;
         [SerializeField] private Button _toggleInventoryButton;
 
-        protected InventoryPresenter _presenter;
-
         private int _activeSlotIndex = -1;
 
         public InventorySlot[] Slots => _slots;
 
-        public void Initialize(InventoryPresenter presenter)
+        public void Initialize()
         {
-            _presenter = presenter;
-            _toggleInventoryButton.onClick.AddListener(ToggleInventory);
-            _removeOneButton.onClick.AddListener(RemoveOneItem);
-            _removeAllButton.onClick.AddListener(RemoveAllItems);
-
+            Subscribe();
+            
             _inventoryPanel.SetActive(false);
 
             for (int i = 0; i < Slots.Length; i++)
@@ -32,20 +38,24 @@ namespace PocketZone
             }
         }
 
-        public void ToggleInventory()
+        private void Subscribe()
         {
-            _inventoryPanel.SetActive(!_inventoryPanel.activeInHierarchy);
-            
-            if(!_inventoryPanel.activeInHierarchy)
-            {
-                HideButtons();
-            }
+            _toggleInventoryButton.onClick.AddListener(() => OnToggleInventoryClicked());
+            _removeOneButton.onClick.AddListener(() => OnRemoveOneButtonClicked());
+            _removeAllButton.onClick.AddListener(() => OnRemoveAllButtonClicked());
+        }
+
+        public void UpdateSlotUI(int slotIndex, Item item, int count)
+        {
+            Slots[slotIndex].Item = item;
+            Slots[slotIndex].Count = count;
+            Slots[slotIndex].UpdateUI();
         }
 
         public void ShowButtons(int slotIndex)
         {
             _removeOneButton.gameObject.SetActive(true);
-            if (_presenter.GetItemCount(slotIndex) > 1)
+            if (Slots[slotIndex].Count > 1)
             {
                 _removeAllButton.gameObject.SetActive(true);
             }
@@ -61,19 +71,29 @@ namespace PocketZone
             _removeAllButton.gameObject.SetActive(false);
         }
 
+        public void ToggleInventory(bool isActive)
+        {
+            _inventoryPanel.SetActive(isActive);
+            if (!isActive)
+            {
+                HideButtons();
+            }
+        }
+
         public void OnSlotClick(InventorySlot slot)
         {
-            int slotIndex = System.Array.IndexOf(Slots, slot);
-            if(_activeSlotIndex == slotIndex)
+            int slotIndex = Array.IndexOf(Slots, slot);
+            if (_activeSlotIndex == slotIndex)
             {
                 _activeSlotIndex = -1;
                 HideButtons();
+                SlotInteraction?.Invoke(slotIndex, SlotAction.Deselect);
             }
             else if (slotIndex != -1 && slot.Item != null)
             {
                 _activeSlotIndex = slotIndex;
                 ShowButtons(slotIndex);
-                _presenter.OnSlotClick(slotIndex);
+                SlotInteraction?.Invoke(slotIndex, SlotAction.Select);
             }
             else
             {
@@ -82,41 +102,27 @@ namespace PocketZone
             }
         }
 
-        public void UpdateSlotUI(int slotIndex, Item item, int count)
+        private void OnToggleInventoryClicked()
         {
-            Slots[slotIndex].Item = item;
-            Slots[slotIndex].Count = count;
-            Slots[slotIndex].UpdateUI();
+            ToggleInventoryInteraction?.Invoke(!_inventoryPanel.activeInHierarchy);
         }
 
-        public void RemoveOneItem()
+        private void OnRemoveOneButtonClicked()
         {
             if (_activeSlotIndex != -1)
             {
-                _presenter.RemoveOneItem(_activeSlotIndex);
-                UpdateActiveSlotUI(_activeSlotIndex);
+                RemoveOneInteraction?.Invoke();
             }
         }
 
-        public void RemoveAllItems()
+        private void OnRemoveAllButtonClicked()
         {
             if (_activeSlotIndex != -1)
             {
-                _presenter.RemoveAllItems(_activeSlotIndex);
-                UpdateActiveSlotUI(_activeSlotIndex);
-            }
-        }
-
-        private void UpdateActiveSlotUI(int slotIndex)
-        {
-            var slotData = _presenter.GetSlotData(slotIndex);
-            UpdateSlotUI(slotIndex, slotData.Item, slotData.Count);
-
-            if (slotData.Item == null && _activeSlotIndex == slotIndex)
-            {
-                _activeSlotIndex = -1;
-                HideButtons();
+                RemoveAllInteraction?.Invoke();
             }
         }
     }
+
+    
 }

@@ -9,19 +9,21 @@ namespace PocketZone
         public int GetCurrentAmmo() => _currentAmmo;
         public int GetMaxAmmo() => _maxAmmo;
 
-        
         [Header("Shooting Settings")]
         [SerializeField] private GameObject _bulletPrefab;
         [SerializeField] private Transform _firePoint;
         [SerializeField] private float _bulletSpeed = 10f;
         [SerializeField] private float _fireRate = 0.5f;
-        
+
         [Header("Ammo Settings")]
         [SerializeField] private int _maxAmmo = 30;
         [SerializeField] private int _currentAmmo;
         [SerializeField] private bool _infiniteAmmo = false;
-
         [SerializeField] private TextMeshProUGUI _ammoText;
+
+        [Header("Object Pool")]
+        [SerializeField] private ObjectPool _objectPool;
+        [SerializeField] private int _bulletPoolSize = 10;
 
         private bool _isFacingRight = true;
         private float _nextFireTime;
@@ -29,8 +31,14 @@ namespace PocketZone
         private void Start()
         {
             _currentAmmo = _maxAmmo;
-
             UpdateAmmoText();
+
+            InitializeBulletPool();
+        }
+
+        private void InitializeBulletPool()
+        {
+            _objectPool.AddPool(_bulletPrefab, _bulletPoolSize);
         }
 
         public void Interact()
@@ -43,11 +51,8 @@ namespace PocketZone
             if (CanShoot())
             {
                 Shoot();
-                
                 ConsumeAmmo();
-
                 _nextFireTime = Time.time + _fireRate;
-
                 UpdateAmmoText();
             }
         }
@@ -55,14 +60,25 @@ namespace PocketZone
         private bool CanShoot()
         {
             return Time.time >= _nextFireTime && 
-                  (_currentAmmo > 0 || _infiniteAmmo);
+                   (_currentAmmo > 0 || _infiniteAmmo);
         }
 
         private void Shoot()
         {
-            Vector2 shootDirection = _isFacingRight ? Vector2.right : Vector2.left;
-            GameObject bullet = Instantiate(_bulletPrefab, _firePoint.position, _firePoint.rotation);
-            bullet.GetComponent<Rigidbody2D>().velocity = shootDirection.normalized * _bulletSpeed;
+            GameObject bullet = _objectPool.GetObject(_bulletPrefab);
+            if (bullet != null)
+            {
+                bullet.transform.position = _firePoint.position;
+                bullet.transform.rotation = _firePoint.rotation;
+
+                Vector2 shootDirection = _isFacingRight ? Vector2.right : Vector2.left;
+
+                Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+                rb.velocity = shootDirection.normalized * _bulletSpeed;
+
+                var bulletScript = bullet.GetComponent<Bullet>();
+                bulletScript.Initialize(_objectPool);
+            }
         }
 
         private void ConsumeAmmo()
@@ -99,6 +115,5 @@ namespace PocketZone
                 }
             }
         }
-        
     }
 }

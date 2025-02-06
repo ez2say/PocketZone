@@ -4,13 +4,16 @@ namespace PocketZone
 {
     public class InventoryPresenter
     {
-        private InventoryModel _model;
-        private InventoryView _view;
+        private readonly InventoryModel _model;
+        private readonly IInventoryView _view;
 
-        public InventoryPresenter(InventoryModel model, InventoryView view)
+        public InventoryPresenter(InventoryModel model, IInventoryView view)
         {
             _model = model;
             _view = view;
+
+            SubscribeToViewEvents();
+            UpdateView();
         }
 
         public bool AddItem(Item item)
@@ -20,34 +23,51 @@ namespace PocketZone
             return result;
         }
 
-        public void OnSlotClick(int slotIndex)
+        private void SubscribeToViewEvents()
         {
-            if (slotIndex >= 0 && slotIndex < _model.SlotCount)
+            _view.SlotInteraction += OnSlotInteraction;
+            _view.ToggleInventoryInteraction += OnToggleInventoryInteraction;
+            _view.RemoveOneInteraction += OnRemoveOneInteraction;
+            _view.RemoveAllInteraction += OnRemoveAllInteraction;
+        }
+
+        private void OnSlotInteraction(int slotIndex, SlotAction action)
+        {
+            if (action == SlotAction.Select)
             {
-                var slotData = _model.GetSlot(slotIndex);
-                if (slotData.Item != null)
-                {
-                    _view.ShowButtons(slotIndex);
-                }
+                _model.SetActiveSlotIndex(slotIndex);
+                _view.ShowButtons(slotIndex);
+            }
+            else if (action == SlotAction.Deselect)
+            {
+                _model.SetActiveSlotIndex(-1);
+                _view.HideButtons();
             }
         }
 
-        public void RemoveOneItem(int slotIndex)
+        private void OnToggleInventoryInteraction(bool isActive)
         {
-            _model.RemoveOneItem(slotIndex);
-            UpdateView();
-
+            _view.ToggleInventory(isActive);
         }
 
-        public void RemoveAllItems(int slotIndex)
+        private void OnRemoveOneInteraction()
         {
-            _model.RemoveAllItems(slotIndex);
-            UpdateView();
+            int activeSlotIndex = _model.GetActiveSlotIndex();
+            if (activeSlotIndex != -1)
+            {
+                _model.RemoveOneItem(activeSlotIndex);
+                UpdateView();
+            }
         }
 
-        public int GetItemCount(int slotIndex)
+        private void OnRemoveAllInteraction()
         {
-            return _model.GetItemCount(slotIndex);
+            int activeSlotIndex = _model.GetActiveSlotIndex();
+            if (activeSlotIndex != -1)
+            {
+                _model.RemoveAllItems(activeSlotIndex);
+                UpdateView();
+            }
         }
 
         private void UpdateView()
@@ -57,11 +77,6 @@ namespace PocketZone
                 var slotData = _model.GetSlot(i);
                 _view.UpdateSlotUI(i, slotData.Item, slotData.Count);
             }
-        }
-
-        public InventorySlot GetSlotData(int slotIndex)
-        {
-            return _model.GetSlot(slotIndex);
         }
     }
 }

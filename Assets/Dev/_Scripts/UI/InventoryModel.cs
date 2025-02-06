@@ -6,6 +6,7 @@ namespace PocketZone
     {
         public int SlotCount => _slots.Count;
         private List<InventorySlot> _slots;
+        private int _activeSlotIndex = -1;
 
         public InventoryModel(int slotCount)
         {
@@ -18,6 +19,8 @@ namespace PocketZone
 
         public bool AddItem(Item item)
         {
+            if (item == null) return false;
+
             foreach (var slot in _slots)
             {
                 if (slot.Item != null && slot.Item.ID == item.ID && slot.Count < item.MaxStack)
@@ -42,44 +45,58 @@ namespace PocketZone
 
         public void RemoveOneItem(int slotIndex)
         {
-            if (slotIndex >= 0 && slotIndex < _slots.Count)
+            if (slotIndex < 0 || slotIndex >= _slots.Count) return;
+
+            var slot = _slots[slotIndex];
+            if (slot.Item != null && slot.Count > 0)
             {
-                var slot = _slots[slotIndex];
-                if (slot.Item != null && slot.Count > 0)
+                slot.Count--;
+                if (slot.Count == 0)
                 {
-                    slot.Count--;
-                    if (slot.Count == 0)
-                    {
-                        slot.Item = null;
-                    }
+                    slot.Item = null;
                 }
             }
         }
 
         public void RemoveAllItems(int slotIndex)
         {
-            if (slotIndex >= 0 && slotIndex < _slots.Count)
-            {
-                var slot = _slots[slotIndex];
-                slot.Item = null;
-                slot.Count = 0;
-            }
+            if (slotIndex < 0 || slotIndex >= _slots.Count) return;
+
+            var slot = _slots[slotIndex];
+            slot.Item = null;
+            slot.Count = 0;
         }
 
         public InventorySlot GetSlot(int index)
         {
-            return _slots[index];
+            return (index >= 0 && index < _slots.Count) ? _slots[index] : null;
         }
 
         public int GetItemCount(int slotIndex)
         {
-            return _slots[slotIndex]?.Count ?? 0;
+            return (slotIndex >= 0 && slotIndex < _slots.Count) ? _slots[slotIndex]?.Count ?? 0 : 0;
         }
-    }
 
-    public class InventorySlotData
-    {
-        public Item Item { get; set; }
-        public int Count { get; set; }
+        public void SetActiveSlotIndex(int slotIndex)
+        {
+            if (slotIndex >= 0 && slotIndex < _slots.Count)
+            {
+                _activeSlotIndex = slotIndex;
+            }
+            else
+            {
+                _activeSlotIndex = -1;
+            }
+        }
+
+        public int GetActiveSlotIndex()
+        {
+            return _activeSlotIndex;
+        }
+
+        public InventorySlot GetActiveSlot()
+        {
+            return (GetActiveSlotIndex() >= 0) ? _slots[_activeSlotIndex] : null;
+        }
     }
 }

@@ -256,7 +256,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2390074206752816233}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -282,9 +282,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.017883986, y: 0}
+  m_Offset: {x: 0.017883986, y: 0.081211135}
   serializedVersion: 2
-  m_Radius: 0.21385601
+  m_Radius: 0.13264488
 --- !u!1 &4182092851037864982
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,6 +639,10 @@ PrefabInstance:
     - target: {fileID: 2558826622603095285, guid: e24ce90d2eb041445b04f50953af7e92, type: 3}
       propertyPath: m_Name
       value: HealthPointBarCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2558826622603095286, guid: e24ce90d2eb041445b04f50953af7e92, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5261091701860080314, guid: e24ce90d2eb041445b04f50953af7e92, type: 3}
       propertyPath: m_AnchorMax.y

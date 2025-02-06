@@ -11,6 +11,8 @@ namespace PocketZone
         {
             _healthSlider = GetComponentInChildren<Slider>(true);
 
+            Debug.Log($"Слайдер{_healthSlider}");
+
             _healthSlider.value = 1;
 
             Debug.Log($"{_healthSlider.value}");
