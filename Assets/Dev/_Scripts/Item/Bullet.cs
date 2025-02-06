@@ -14,17 +14,13 @@ namespace PocketZone
         {
             _objectPool = objectPool;
             _startPosition = transform.position;
-
-            Debug.Log($"Пуля создана на позиции {_startPosition}");
         }
 
         private void Update()
         {
             float distanceTraveled = Vector2.Distance(_startPosition, transform.position);
-            Debug.Log($"Дистанция пули {distanceTraveled}");
             if (distanceTraveled >= _maxDistance)
             {
-                Debug.Log($"Пуля должна возвратиться в пул");
                 ReturnToPool();
             }
         }
@@ -48,9 +44,10 @@ namespace PocketZone
 
         private void ReturnToPool()
         {
-            _objectPool.ReturnObjectToPool(gameObject);
+            if (_objectPool != null)
+            {
+                _objectPool.ReturnObjectToPool(gameObject);
+            }
         }
-
-        
     }
 }

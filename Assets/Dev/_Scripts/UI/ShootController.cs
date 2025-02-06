@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 namespace PocketZone
@@ -32,13 +31,29 @@ namespace PocketZone
         {
             _currentAmmo = _maxAmmo;
             UpdateAmmoText();
-
             InitializeBulletPool();
         }
 
         private void InitializeBulletPool()
         {
-            _objectPool.AddPool(_bulletPrefab, _bulletPoolSize);
+            if (_objectPool == null)
+            {
+                _objectPool = FindObjectOfType<ObjectPool>();
+                if (_objectPool == null)
+                {
+                    Debug.LogError("ObjectPool не найден на сцене!");
+                    return;
+                }
+            }
+
+            if (_bulletPrefab != null)
+            {
+                _objectPool.AddPool(_bulletPrefab, _bulletPoolSize);
+            }
+            else
+            {
+                Debug.LogError("Префаб пули не назначен!");
+            }
         }
 
         public void Interact()
@@ -75,9 +90,16 @@ namespace PocketZone
 
                 Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
                 rb.velocity = shootDirection.normalized * _bulletSpeed;
-
+                
                 var bulletScript = bullet.GetComponent<Bullet>();
-                bulletScript.Initialize(_objectPool);
+                if (bulletScript != null)
+                {
+                    bulletScript.Initialize(_objectPool);
+                }
+                else
+                {
+                Debug.LogError("Компонент Bullet не найден на объекте!");
+                }
             }
         }
 

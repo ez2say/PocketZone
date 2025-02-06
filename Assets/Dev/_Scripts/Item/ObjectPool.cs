@@ -5,77 +5,61 @@ namespace PocketZone
 {
     public class ObjectPool : MonoBehaviour
     {
-        private Dictionary<GameObject, Queue<GameObject>> poolDictionary = new();
+        private Dictionary<GameObject, Queue<GameObject>> _pools = new Dictionary<GameObject, Queue<GameObject>>();
 
         public void AddPool(GameObject prefab, int size)
         {
-            if (!poolDictionary.ContainsKey(prefab))
+            if (!_pools.ContainsKey(prefab))
             {
-                Queue<GameObject> objectPool = new();
+                var pool = new Queue<GameObject>();
                 for (int i = 0; i < size; i++)
                 {
                     GameObject obj = Instantiate(prefab);
                     obj.SetActive(false);
-                    objectPool.Enqueue(obj);
+                    pool.Enqueue(obj);
                 }
-                poolDictionary[prefab] = objectPool;
-            }
-            else
-            {
-                Queue<GameObject> objectPool = poolDictionary[prefab];
-                for (int i = 0; i < size; i++)
-                {
-                    GameObject obj = Instantiate(prefab);
-                    obj.SetActive(false);
-                    objectPool.Enqueue(obj);
-                }
+                _pools[prefab] = pool;
             }
         }
 
         public GameObject GetObject(GameObject prefab)
         {
-            Queue<GameObject> objectPool = poolDictionary[prefab];
-            if (objectPool.Count > 0)
+            Queue<GameObject> poolQueue = _pools[prefab];
+            
+            if (poolQueue.Count > 0)
             {
-                GameObject obj = objectPool.Dequeue();
+                GameObject obj = poolQueue.Dequeue();
                 obj.SetActive(true);
+                Debug.Log("Вернули объект");
                 return obj;
             }
             else
             {
-                Debug.LogWarning($"Пул для {prefab.name} пуст");
                 GameObject newObj = Instantiate(prefab);
                 newObj.SetActive(true);
-                objectPool.Enqueue(newObj);
+                poolQueue.Enqueue(newObj);
+                Debug.Log("Вернули новый объект");
                 return newObj;
             }
         }
 
         public void ReturnObjectToPool(GameObject obj)
         {
-            foreach (var kvp in poolDictionary)
+            foreach (var pool in _pools)
             {
-                if (kvp.Value.Contains(obj))
+                if (IsInstanceOfPrefab(obj, pool.Key))
                 {
-                    kvp.Value.Enqueue(obj);
                     obj.SetActive(false);
-                    Debug.Log($"Объект {obj.name} вернулся в пул.");
+                    pool.Value.Enqueue(obj);
                     return;
                 }
             }
+            Debug.LogWarning($"Объект {obj.name} Не часть пула");
         }
 
-        public bool ContainsObject(GameObject obj)
+        private bool IsInstanceOfPrefab(GameObject instance, GameObject prefab)
         {
-            foreach (var queue in poolDictionary.Values)
-            {
-                foreach (var pooledObj in queue)
-                {
-                    if (pooledObj == obj)
-                        return true;
-                }
-            }
-            return false;
+            return instance.name.StartsWith(prefab.name);
         }
     }
 }

@@ -62,10 +62,7 @@ namespace PocketZone
 
         private void CheckPlayerDistance()
         {
-            Debug.Log($"Дистанция {transform.position}");
-            Debug.Log($"Дистанция игрока {_playerTransform.position}");
             float distanceToPlayer = Vector2.Distance(transform.position, _playerTransform.position);
-            Debug.Log($"Дистанция до игрока{distanceToPlayer}");
             _isPlayerInRange = distanceToPlayer <= _detectionRadius;
         }
 
