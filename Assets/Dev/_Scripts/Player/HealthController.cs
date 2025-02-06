@@ -16,11 +16,11 @@ namespace PocketZone
         [SerializeField] private HealthBarController _healthBarController;
 
 
-        protected virtual void Start()
+        private void Start()
         {
             Health = _maxHealth;
             Debug.Log($"{Health}");
-            UpdateHealthUI();
+            _healthBarController.Initialize();
         }
 
         public void TakeDamage(int damage)
@@ -44,8 +44,13 @@ namespace PocketZone
 
         private void UpdateHealthUI()
         {
-            if (_healthBarController != null)
-                _healthBarController.DecreaseHealthBar((float)Health / _maxHealth);
+            if (_healthBarController == null)
+            {
+                Debug.LogError("HealthBarController is not assigned in " + gameObject.name);
+                return;
+            }
+
+            _healthBarController.DecreaseHealthBar((float)Health / _maxHealth);
         }
     }
 }

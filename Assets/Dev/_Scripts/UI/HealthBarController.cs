@@ -7,15 +7,15 @@ namespace PocketZone
     {
         private Slider _healthSlider;
 
-        private void Start()
+        public void Initialize()
         {
-            _healthSlider = GetComponentInChildren<Slider>(true);
+            _healthSlider = GetComponent<Slider>();
 
             Debug.Log($"Слайдер{_healthSlider}");
 
             _healthSlider.value = 1;
 
-            Debug.Log($"{_healthSlider.value}");
+            Debug.Log($"Значение{_healthSlider.value}");
         }
 
         public void DecreaseHealthBar(float value)
